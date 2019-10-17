@@ -24,7 +24,7 @@ public class LocalDataSourcePageKey extends PageKeyedDataSource<Long, Movie> {
     @Override
     public void loadInitial(@NonNull LoadInitialParams<Long> params, @NonNull LoadInitialCallback<Long, Movie> callback) {
         Log.i(TAG, "Loading Initial Rang, Count " + params.requestedLoadSize);
-        List<Movie> movies = movieDao.getAllMovieLocal();
+        List<Movie> movies = movieDao.getMoviesPaging();
         if(movies.size() != 0) {
             callback.onResult(movies, (long)0, (long)1);
         }

@@ -8,7 +8,7 @@ import androidx.paging.DataSource;
 import muchbeer.raum.data.db.MovieDao;
 import muchbeer.raum.data.db.RoomDb;
 
-public class LocalDataSourceFactory extends DataSource.Factory implements muchbeer.raum.data.repository.datasource.DataSource {
+public class LocalDataSourceFactory extends DataSource.Factory  {
 
     private RoomDb mDb;
     private static final String TAG = LocalDataSourceFactory.class.getSimpleName();
@@ -16,24 +16,15 @@ public class LocalDataSourceFactory extends DataSource.Factory implements muchbe
 
 
     public LocalDataSourceFactory(MovieDao dao) {
-        //    mDb = RoomDbPaging.getDatabase(mContextApplication);
+
         moviesPageKeyedDataSource = new LocalDataSourcePageKey(dao);
     }
 
-    private final MutableLiveData<String> mError=new MutableLiveData<>();
     @NonNull
     @Override
     public DataSource create() {
-        return null;
+        return moviesPageKeyedDataSource;
     }
 
-    @Override
-    public LiveData getMovieDataStream() {
-        return mDb.movieDao().getAllMoviesLive();
-    }
 
-    @Override
-    public LiveData<String> getErrorStream() {
-        return mError;
-    }
 }

@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity implements MainScreen {
 
 
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
-    private PagedList<Movie> movies;
+    private PagedList<Movie> moviesPaging;
     private RecyclerView recyclerView;
     private MovieAdapter movieAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -72,38 +72,19 @@ public class MainActivity extends AppCompatActivity implements MainScreen {
     }
 
     public void getPopularMovies() {
-        // mViewModel.getCoinsMarketData().observe(this, dataObserver);
-        // mViewModel.getErrorUpdates().observe(this, errorObserver);
-        // mViewModel.fetchData();
 
-        //swipeRefreshLayout.setRefreshing(false);
 
-       /* mainActivityViewModel.getAllMovieLocalData().observe(this, new Observer<List<Movie>>() {
+        mainActivityViewModel.getMoviesPaging().observe(this, new Observer<PagedList<Movie>>() {
             @Override
-            public void onChanged(List<Movie> movies) {
-                moviesMain = (ArrayList<Movie>) movies;
+            public void onChanged(PagedList<Movie> moviesOnDBandNet) {
+                moviesPaging = moviesOnDBandNet;
                 showOnRecyclerView();
-            }
-        });*/
+                if(moviesPaging==null) {
+                    swipeRefreshLayout.setRefreshing(false);
+                }
 
-       //paging here below
-        mainActivityViewModel.concertList.observe(this, new Observer<PagedList<Movie>>() {
-            @Override
-            public void onChanged(PagedList<Movie> localmovies) {
-                movies = localmovies;
-                showOnRecyclerView();
             }
         });
-
-        mainActivityViewModel.getErrorUpdates().observe(this, new Observer<String>() {
-            @Override
-            public void onChanged(String errorObserver) {
-                setError(errorObserver);
-            }
-        });
-
-        mainActivityViewModel.fetchData();
-
     }
 
     private void showErrorToast(String error) {
@@ -116,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements MainScreen {
     //    movieAdapter = new MovieAdapter(this, moviesMain);
 //paging here below
         movieAdapter = new MovieAdapter(this);
-        movieAdapter.submitList(movies);
+        movieAdapter.submitList(moviesPaging);
 
         if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
 

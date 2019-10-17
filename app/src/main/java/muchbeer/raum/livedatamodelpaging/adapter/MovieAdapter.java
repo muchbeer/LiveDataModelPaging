@@ -15,12 +15,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 import muchbeer.raum.data.model.Movie;
+import muchbeer.raum.data.model.NetworkState;
 import muchbeer.raum.livedatamodelpaging.R;
 import muchbeer.raum.livedatamodelpaging.databinding.MovieListItemBinding;
 import muchbeer.raum.livedatamodelpaging.view.MovieActivity;
 
 public class MovieAdapter extends PagedListAdapter<Movie, MovieAdapter.MovieViewHolder> {
 
+    private NetworkState networkState;
     private Context mcontext;
     private ArrayList<Movie> movieArrayList;
     private static String LOG_TAG = MovieAdapter.class.getSimpleName();
@@ -56,13 +58,41 @@ public class MovieAdapter extends PagedListAdapter<Movie, MovieAdapter.MovieView
         Log.d(LOG_TAG, "The movie items are: " + movie);
         holder.movieListItemBinding.setMovie(movie);
     }
-/*
 
-    @Override
-    public int getItemCount() {
-        return movieArrayList.size();
+    private boolean hasExtraRow() {
+        if (networkState != null && networkState != NetworkState.LOADED) {
+            return true;
+        } else {
+            return false;
+        }
     }
-*/
+
+    /*@Override
+    public int getItemViewType(int position) {
+
+        if (hasExtraRow() && position == getItemCount() - 1) {
+            return R.layout.network_state_item;
+        } else {
+            return R.layout.movie_item;
+        }
+
+    }*/
+
+    public void setNetworkState(NetworkState newNetworkState) {
+        NetworkState previousState = this.networkState;
+        boolean previousExtraRow = hasExtraRow();
+        this.networkState = newNetworkState;
+        boolean newExtraRow = hasExtraRow();
+        if (previousExtraRow != newExtraRow) {
+            if (previousExtraRow) {
+                notifyItemRemoved(getItemCount());
+            } else {
+                notifyItemInserted(getItemCount());
+            }
+        } else if (newExtraRow && previousState != newNetworkState) {
+            notifyItemChanged(getItemCount() - 1);
+        }
+    }
 
     public class MovieViewHolder extends RecyclerView.ViewHolder {
 

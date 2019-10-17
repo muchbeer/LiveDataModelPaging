@@ -13,33 +13,24 @@ import java.util.List;
 
 import muchbeer.raum.data.db.MovieDao;
 import muchbeer.raum.data.model.Movie;
+import muchbeer.raum.data.model.NetworkState;
 import muchbeer.raum.data.repository.MovieRepository;
 import muchbeer.raum.data.repository.MovieRepositoryInterface;
+import muchbeer.raum.data.repository.MovieRepositoryPaging;
 
 public class MainActivityViewModel extends AndroidViewModel {
 
     private static final String TAG = MainActivityViewModel.class.getSimpleName();
-    private MovieRepositoryInterface mMovieRepositoryInterface;
 
-    private MovieDao concertDao;
-    public final LiveData<PagedList<Movie>> concertList;
 
-    public LiveData<List<Movie>> getAllMovieLocalData() {
-        return mMovieRepositoryInterface.getMovieData();
-    }
-
-    public LiveData<String> getErrorUpdates() {
-        return mMovieRepositoryInterface.getErrorStream();
-    }
+    private MovieRepositoryPaging mMovieRepositoryInterface;
 
     public MainActivityViewModel(@NonNull Application application) {
         super(application);
-        this.concertDao = concertDao;
 
-        mMovieRepositoryInterface = MovieRepository.create(application);
+        mMovieRepositoryInterface = MovieRepositoryPaging.getInstance(application);
 
-        concertList = new LivePagedListBuilder<Integer, Movie>(
-                concertDao.getAllMovieOnPaging(), 50).build();
+
     }
 
     @Override
@@ -48,8 +39,12 @@ public class MainActivityViewModel extends AndroidViewModel {
         super.onCleared();
     }
 
-    public void fetchData() {
-        mMovieRepositoryInterface.fetchData();
+    public LiveData<PagedList<Movie>> getMoviesPaging() {
+        return mMovieRepositoryInterface.getMoviesPaging();
+    }
+
+    public LiveData<NetworkState> getNetworkState() {
+        return mMovieRepositoryInterface.getNetworkState();
     }
 
 }

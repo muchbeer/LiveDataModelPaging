@@ -33,4 +33,21 @@ public interface MovieDao {
     @Query("SELECT * FROM movietbl")
     DataSource.Factory<Integer, Movie> getAllMovieOnPaging();
 
+
+    @Query("SELECT * FROM movietbl")
+    List<Movie> getMoviesPaging();
+
+    /**
+     * Insert a movie in the database. If the movie already exists, replace it.
+     *
+     * @param movie the movie to be inserted.
+     */
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    void insertMoviePaging(Movie movie);
+
+    @Query("DELETE FROM movietbl")
+    abstract void deleteAllMoviesPaging();
+
+
+
 }
