@@ -28,16 +28,24 @@ public class RemoteDataSourcePageKey extends PageKeyedDataSource<Long, Movie> {
     private static final String LOG_TAG = RemoteDataSourcePageKey.class.getSimpleName();;
     private final MovieDataService moviesService;
     private final MutableLiveData networkState;
+    private  MutableLiveData<String> mError=new MutableLiveData<>();
     private final ReplaySubject<Movie> moviesObservable;
 
     RemoteDataSourcePageKey() {
         moviesService = RetroInstance.getService();
         networkState = new MutableLiveData();
+        mError = new MutableLiveData<>();
         moviesObservable = ReplaySubject.create();
     }
     public MutableLiveData getNetworkState() {
         return networkState;
     }
+
+
+    public MutableLiveData<String> getErrorStream() {
+        return mError;
+    }
+
 
     public ReplaySubject<Movie> getMoviesReplay() {
         return moviesObservable;
@@ -68,6 +76,8 @@ public class RemoteDataSourcePageKey extends PageKeyedDataSource<Long, Movie> {
                 } else {
                     Log.e("API CALL FAILURE: ", response.toString());
                     networkState.postValue(new NetworkState(NetworkState.Status.FAILED, response.toString()));
+                    mError.postValue(response.toString());
+
                 }
             }
 
@@ -80,6 +90,7 @@ public class RemoteDataSourcePageKey extends PageKeyedDataSource<Long, Movie> {
                     errorMessage = response.getMessage();
                 }
                 networkState.postValue(new NetworkState(NetworkState.Status.FAILED, errorMessage));
+                mError.postValue(response.toString());
                 callback.onResult(new ArrayList<>(), (long) 1, (long) 1);
             }
         });
@@ -124,6 +135,7 @@ public class RemoteDataSourcePageKey extends PageKeyedDataSource<Long, Movie> {
                 } else {
                     Log.e("API CALL FAILURE: ", response.toString());
                     networkState.postValue(new NetworkState(NetworkState.Status.FAILED, response.toString()));
+                    mError.postValue(response.toString());
                 }
             }
 
@@ -137,6 +149,7 @@ public class RemoteDataSourcePageKey extends PageKeyedDataSource<Long, Movie> {
                 }
                 networkState.postValue(new NetworkState(NetworkState.Status.FAILED, errorMessage));
                 callback.onResult(new ArrayList<>(), (long)(page.get()));
+                mError.postValue(response.toString());
 
             }
         });

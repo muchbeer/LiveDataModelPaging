@@ -43,8 +43,8 @@ public class MainActivityViewModel extends AndroidViewModel {
         return mMovieRepositoryInterface.getMoviesPaging();
     }
 
-    public LiveData<NetworkState> getNetworkState() {
-        return mMovieRepositoryInterface.getNetworkState();
+    public LiveData<String> getErrorUpdates() {
+        return mMovieRepositoryInterface.getErrorMessage();
     }
 
 }

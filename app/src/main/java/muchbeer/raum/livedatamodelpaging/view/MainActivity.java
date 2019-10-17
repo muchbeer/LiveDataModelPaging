@@ -79,15 +79,19 @@ public class MainActivity extends AppCompatActivity implements MainScreen {
             public void onChanged(PagedList<Movie> moviesOnDBandNet) {
                 moviesPaging = moviesOnDBandNet;
                 showOnRecyclerView();
-                if(moviesPaging==null) {
+                if(moviesPaging!=null) {
                     swipeRefreshLayout.setRefreshing(false);
                 }
 
             }
         });
+
+        mainActivityViewModel.getErrorUpdates().observe(this, errorInfo-> {
+            setError(errorInfo);
+        });
     }
 
-    private void showErrorToast(String error) {
+    private void showErrorToastUpdate(String error) {
         Toast.makeText(this, "Error: " + error, Toast.LENGTH_LONG).show();
     }
 
@@ -125,6 +129,6 @@ public class MainActivity extends AppCompatActivity implements MainScreen {
 
     @Override
     public void setError(String msg) {
-        showErrorToast(msg);
+        showErrorToastUpdate(msg);
     }
 }

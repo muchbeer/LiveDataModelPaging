@@ -3,6 +3,8 @@ package muchbeer.raum.data.repository.paging;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.paging.PageKeyedDataSource;
 
 import java.util.List;
@@ -19,7 +21,7 @@ public class LocalDataSourcePageKey extends PageKeyedDataSource<Long, Movie> {
     public LocalDataSourcePageKey(MovieDao movieDao) {
         this.movieDao = movieDao;
     }
-
+    private final MutableLiveData<String> mError=new MutableLiveData<>();
 
     @Override
     public void loadInitial(@NonNull LoadInitialParams<Long> params, @NonNull LoadInitialCallback<Long, Movie> callback) {
@@ -39,4 +41,19 @@ public class LocalDataSourcePageKey extends PageKeyedDataSource<Long, Movie> {
     public void loadAfter(@NonNull LoadParams<Long> params, @NonNull LoadCallback<Long, Movie> callback) {
 
     }
+    public void insertMoviesOnline2Local(Movie movies) {
+        try {
+          movieDao.insertMoviePaging(movies);
+        }catch(Exception e)
+        {
+            e.printStackTrace();
+            mError.postValue(e.getMessage());
+        }
+    }
+
+    public LiveData<String> getErrorStream() {
+        return mError;
+    }
+
+
 }

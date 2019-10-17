@@ -5,6 +5,7 @@ import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
+import androidx.lifecycle.Observer;
 import androidx.paging.PagedList;
 
 import io.reactivex.schedulers.Schedulers;
@@ -12,6 +13,7 @@ import muchbeer.raum.data.db.RoomDb;
 import muchbeer.raum.data.model.Movie;
 import muchbeer.raum.data.model.NetworkState;
 import muchbeer.raum.data.repository.paging.LocalDataSourceFactory;
+import muchbeer.raum.data.repository.paging.LocalDataSourcePageKey;
 import muchbeer.raum.data.repository.paging.RemoteDataSourceFactory;
 
 public class MovieRepositoryPaging {
@@ -21,6 +23,8 @@ public class MovieRepositoryPaging {
     final private MovieNetwork network;
     final private RoomDb database;
     final private MediatorLiveData liveDataMerger;
+    MediatorLiveData<String> mMovieErrorMerger = new MediatorLiveData<>();
+
 
     public MovieRepositoryPaging(Context mContext) {
         RemoteDataSourceFactory netDataSourceFactory = new RemoteDataSourceFactory();
@@ -28,6 +32,8 @@ public class MovieRepositoryPaging {
         network = new MovieNetwork(netDataSourceFactory, boundaryCallback);
 
         database = RoomDb.getDatabase(mContext.getApplicationContext());
+        LocalDataSourcePageKey localDataSourceFactory2 = new LocalDataSourcePageKey(database.movieDao());
+
         // when we get new movies from net we set them into the database
         liveDataMerger = new MediatorLiveData<>();
 
@@ -36,11 +42,26 @@ public class MovieRepositoryPaging {
             Log.d(TAG, onlineValue.toString());
         });
 
+        mMovieErrorMerger.addSource(network.getmLocalError(), onlineErrorValue -> {
+            liveDataMerger.setValue(onlineErrorValue);
+            Log.d(TAG, onlineErrorValue.toString());
+        });
+
+      //  mMovieErrorMerger.addSource(localDataSourceFactory2.getErrorStream(), });
+        mMovieErrorMerger.addSource(localDataSourceFactory2.getErrorStream(), new Observer<String>() {
+            @Override
+            public void onChanged(String errorString) {
+                mMovieErrorMerger.setValue(errorString);
+            }
+        });
         // save the movies into db
         netDataSourceFactory.getMoviesPaging().
                 observeOn(Schedulers.io()).
                 subscribe(movie -> {
-                    database.movieDao().insertMoviePaging(movie);
+
+                    LocalDataSourcePageKey localDataSourceFactory = new LocalDataSourcePageKey(database.movieDao());
+                    localDataSourceFactory.insertMoviesOnline2Local(movie);
+                 //  database.movieDao().insertMoviePaging(movie);
                 });
     }
 
@@ -68,5 +89,9 @@ public class MovieRepositoryPaging {
 
     public LiveData<NetworkState> getNetworkState() {
         return network.getNetworkState();
+    }
+
+    public LiveData<String> getErrorMessage() {
+        return mMovieErrorMerger;
     }
 }

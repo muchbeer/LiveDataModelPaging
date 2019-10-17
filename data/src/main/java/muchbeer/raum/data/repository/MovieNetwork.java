@@ -22,6 +22,7 @@ public class MovieNetwork {
     private static final int NUMBERS_OF_THREADS = 4;
     final private LiveData<PagedList<Movie>> moviesPaged;
     final private LiveData<NetworkState> networkState;
+    private LiveData<String> mLocalError;
 
 
     public MovieNetwork(RemoteDataSourceFactory dataSourceFactory, PagedList.BoundaryCallback<Movie> boundaryCallback){
@@ -44,6 +45,7 @@ public class MovieNetwork {
                              setBoundaryCallback(boundaryCallback).
                             build();
 
+        mLocalError = dataSourceFactory.getErrorMessage();
     }
 
 
@@ -53,5 +55,9 @@ public class MovieNetwork {
 
     public LiveData<NetworkState> getNetworkState() {
         return networkState;
+    }
+
+    public LiveData<String>  getmLocalError() {
+        return mLocalError;
     }
 }
