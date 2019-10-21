@@ -40,6 +40,7 @@ public class MainActivityViewModel extends AndroidViewModel {
     }
 
     public LiveData<PagedList<Movie>> getMoviesPaging() {
+
         return mMovieRepositoryInterface.getMoviesPaging();
     }
 

@@ -8,25 +8,33 @@
         <variable
             name="movie"
             type="muchbeer.raum.data.model.Movie" />
-    </data>
+
+        <variable name="moviePalette"
+            type="muchbeer.raum.data.model.MoviePalette"/>
+
+   </data>
 
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".view.MovieActivity">
+        tools:context=".view.MovieActivity"
+       >
 
         <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:theme="@style/AppTheme.AppBarOverlay">
+            android:layout_height="match_parent"
+            android:theme="@style/Gadiel.AppBarOverlay">
 
             <com.google.android.material.appbar.CollapsingToolbarLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:fitsSystemWindows="true"
                 app:contentScrim="?attr/colorPrimary"
-                app:expandedTitleGravity="top"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
+                app:expandedTitleMarginEnd="64dp"
+                app:expandedTitleMarginStart="48dp"
+                app:expandedTitleTextAppearance="@android:color/transparent"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed"
                 android:id="@+id/ctbMovie">
 
                 <RelativeLayout
@@ -48,7 +56,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
                     app:layout_collapseMode="pin"
-                    app:popupTheme="@style/AppTheme.PopupOverlay"/>
+                    app:popupTheme="@style/Gadiel.PopupOverlay"/>
 
 
             </com.google.android.material.appbar.CollapsingToolbarLayout>
@@ -56,6 +64,7 @@
         <include layout="@layout/content_movie"
             android:id="@+id/secondary_layout"
             bind:secondaryMovie="@{movie}"
+            bind:secondaryPalette="@{moviePalette}"
 
             />
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

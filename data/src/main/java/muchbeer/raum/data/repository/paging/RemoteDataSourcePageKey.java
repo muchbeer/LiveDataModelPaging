@@ -86,11 +86,21 @@ public class RemoteDataSourcePageKey extends PageKeyedDataSource<Long, Movie> {
                 String errorMessage;
                 if (response.getMessage() == null) {
                     errorMessage = "unknown error";
+                    mError.postValue(errorMessage);
+                    networkState.postValue(new NetworkState(NetworkState.Status.FAILED, errorMessage));
+                    Log.d(LOG_TAG, "The error catched is as follows : "+ errorMessage);
+
+
                 } else {
                     errorMessage = response.getMessage();
+                    mError.postValue(errorMessage);
+                    Log.d(LOG_TAG, "The error catched is as follows : "+ errorMessage);
+                    networkState.postValue(new NetworkState(NetworkState.Status.FAILED, errorMessage));
+
                 }
-                networkState.postValue(new NetworkState(NetworkState.Status.FAILED, errorMessage));
-                mError.postValue(response.toString());
+
+
+
                 callback.onResult(new ArrayList<>(), (long) 1, (long) 1);
             }
         });
@@ -144,12 +154,18 @@ public class RemoteDataSourcePageKey extends PageKeyedDataSource<Long, Movie> {
                 String errorMessage;
                 if (response.getMessage() == null) {
                     errorMessage = "unknown error";
+                     mError.postValue(errorMessage);
+                    Log.d(LOG_TAG, "The error catched is as follows : "+ errorMessage);
+                    networkState.postValue(new NetworkState(NetworkState.Status.FAILED, errorMessage));
                 } else {
                     errorMessage = response.getMessage();
+                    mError.postValue(errorMessage);
+                    Log.d(LOG_TAG, "The error catched is as follows : "+ errorMessage);
+                    networkState.postValue(new NetworkState(NetworkState.Status.FAILED, errorMessage));
                 }
-                networkState.postValue(new NetworkState(NetworkState.Status.FAILED, errorMessage));
+
                 callback.onResult(new ArrayList<>(), (long)(page.get()));
-                mError.postValue(response.toString());
+              //  mError.postValue(response.toString());
 
             }
         });

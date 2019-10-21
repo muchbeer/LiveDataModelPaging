@@ -23,6 +23,7 @@ import muchbeer.raum.livedatamodelpaging.R;
 import muchbeer.raum.livedatamodelpaging.adapter.MovieAdapter;
 import muchbeer.raum.livedatamodelpaging.databinding.ActivityMainBinding;
 import muchbeer.raum.livedatamodelpaging.screen.MainScreen;
+import muchbeer.raum.livedatamodelpaging.screen.MovieNotificationHelper;
 import muchbeer.raum.livedatamodelpaging.viewmodel.MainActivityViewModel;
 
 public class MainActivity extends AppCompatActivity implements MainScreen {
@@ -77,6 +78,9 @@ public class MainActivity extends AppCompatActivity implements MainScreen {
         mainActivityViewModel.getMoviesPaging().observe(this, new Observer<PagedList<Movie>>() {
             @Override
             public void onChanged(PagedList<Movie> moviesOnDBandNet) {
+                Log.d(LOG_TAG, "This is where the notification called");
+                MovieNotificationHelper.getInstance(getApplication()).createNotification();
+
                 moviesPaging = moviesOnDBandNet;
                 showOnRecyclerView();
                 if(moviesPaging!=null) {

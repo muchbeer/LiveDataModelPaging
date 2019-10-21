@@ -1,6 +1,7 @@
 package muchbeer.raum.data.model;
 
 
+import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.widget.ImageView;
@@ -15,8 +16,10 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -24,11 +27,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import muchbeer.raum.data.R;
+import muchbeer.raum.data.utility.LoadImageGlide;
 
 @Entity(tableName = "movietbl",
         indices = {@Index("id")})
 public class Movie extends BaseObservable implements Parcelable {
 
+    static Context context;
     @SerializedName("vote_count")
     @Expose
     private Integer voteCount;
@@ -63,13 +68,8 @@ public class Movie extends BaseObservable implements Parcelable {
 
         String imagePath="https://image.tmdb.org/t/p/w500"+imageURL;
 
-        Glide.with(imageView.getContext())
-                .load(imagePath)
-                .centerCrop()
-                .fitCenter()
-                .placeholder(R.drawable.loading)
-                .into(imageView);
-    }
+        LoadImageGlide.loadimage(imageView, imagePath, getProgressDrawable(imageView.getContext()));
+}
 
     @SerializedName("original_language")
     @Expose
@@ -308,5 +308,15 @@ public class Movie extends BaseObservable implements Parcelable {
 
     public int describeContents() {
         return 0;
+    }
+
+   public static CircularProgressDrawable getProgressDrawable(Context context) {
+
+        CircularProgressDrawable cpd = new CircularProgressDrawable(context);
+        cpd.setStrokeWidth(5f);
+        cpd.setCenterRadius(50f);
+        cpd.start();
+        return cpd;
+
     }
 }

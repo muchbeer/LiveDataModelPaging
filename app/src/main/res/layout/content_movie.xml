@@ -8,13 +8,17 @@
         <variable
             name="secondaryMovie"
             type="muchbeer.raum.data.model.Movie" />
+        <variable
+            name="secondaryPalette"
+            type="muchbeer.raum.data.model.MoviePalette" />
+
 
     </data>
     <RelativeLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/background"
+        android:background="@{secondaryPalette.color}"
         app:layout_behavior="@string/appbar_scrolling_view_behavior2"
         tools:context="muchbeer.raum.com.livedatamodel.view.MovieActivity"
         tools:showIn="@layout/activity_movie">

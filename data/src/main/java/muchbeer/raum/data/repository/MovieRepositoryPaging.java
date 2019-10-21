@@ -69,8 +69,8 @@ public class MovieRepositoryPaging {
         @Override
         public void onZeroItemsLoaded() {
             super.onZeroItemsLoaded();
-            liveDataMerger.addSource(database.getMoviesPagingLocal(), value -> {
-                liveDataMerger.setValue(value);
+            liveDataMerger.addSource(database.getMoviesPagingLocal(), mlocalValue -> {
+                liveDataMerger.setValue(mlocalValue);
                 liveDataMerger.removeSource(database.getMoviesPagingLocal());
             });
         }

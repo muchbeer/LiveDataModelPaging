@@ -24,7 +24,6 @@ public class MovieAdapter extends PagedListAdapter<Movie, MovieAdapter.MovieView
 
     private NetworkState networkState;
     private Context mcontext;
-    private ArrayList<Movie> movieArrayList;
     private static String LOG_TAG = MovieAdapter.class.getSimpleName();
 
 /*    public MovieAdapter(Context context, ArrayList<Movie> movies ) {
