@@ -1,5 +1,6 @@
 package muchbeer.raum.livedatamodelpaging.view;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
@@ -13,10 +14,14 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.Inflater;
 
 import muchbeer.raum.data.model.Movie;
 import muchbeer.raum.livedatamodelpaging.R;
@@ -134,5 +139,38 @@ public class MainActivity extends AppCompatActivity implements MainScreen {
     @Override
     public void setError(String msg) {
         showErrorToastUpdate(msg);
+    }
+
+    //This is valid for Fragment
+  /*  @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.list_menu, menu);
+
+    }*/
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        getMenuInflater().inflate(R.menu.list_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        switch (item.getItemId()) {
+
+            case R.id.actionSettings: {
+             /*   if (isAdded()) {
+                    Navigation.findNavController(getView()).navigate(ListFragmentDirections.actionSetting());
+                }*/
+             Toast.makeText(getApplicationContext(), "This is where you open SettingFragment", Toast.LENGTH_LONG).show();
+
+                break;
+            }
+
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

@@ -17,6 +17,7 @@ import muchbeer.raum.data.model.NetworkState;
 import muchbeer.raum.data.repository.MovieRepository;
 import muchbeer.raum.data.repository.MovieRepositoryInterface;
 import muchbeer.raum.data.repository.MovieRepositoryPaging;
+import muchbeer.raum.livedatamodelpaging.info.SharedPreferenceHelper;
 
 public class MainActivityViewModel extends AndroidViewModel {
 
@@ -24,6 +25,7 @@ public class MainActivityViewModel extends AndroidViewModel {
 
 
     private MovieRepositoryPaging mMovieRepositoryInterface;
+    private SharedPreferenceHelper prefHelper;
 
     public MainActivityViewModel(@NonNull Application application) {
         super(application);
@@ -46,6 +48,22 @@ public class MainActivityViewModel extends AndroidViewModel {
 
     public LiveData<String> getErrorUpdates() {
         return mMovieRepositoryInterface.getErrorMessage();
+    }
+
+
+    //To apply the Preference setting here
+    private void checkCacheDuration() {
+        String cachePreference = prefHelper.getChachefromPreference();
+
+        if(!cachePreference.equals("")) {
+            try {
+                int cachePreferenceInt = Integer.parseInt(cachePreference);
+                //login here since we have chache the time
+            }catch (NumberFormatException e){
+                e.printStackTrace();
+Log.d(TAG, "tHE error inputed from preference is: " + e.getMessage());
+            }
+        }
     }
 
 }
