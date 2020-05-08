@@ -31,4 +31,10 @@
     <style name="Gadiel.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Gadiel.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="CustomSearchView"
+        parent="@android:style/Widget.Holo">
+        <item name="android:textColorHint">#CCCCCC</item>
+    </style>
+
 </resources>

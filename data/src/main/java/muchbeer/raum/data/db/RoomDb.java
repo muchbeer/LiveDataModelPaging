@@ -2,9 +2,12 @@ package muchbeer.raum.data.db;
 
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Transformations;
 import androidx.paging.LivePagedListBuilder;
 import androidx.paging.PagedList;
 import androidx.room.Database;
@@ -22,10 +25,13 @@ import muchbeer.raum.data.repository.paging.LocalDataSourceFactory;
 @Database(entities = {Movie.class},version = 1, exportSchema = false)
 public abstract class RoomDb extends RoomDatabase {
 
+    private static final String LOG_TAG = RoomDb.class.getSimpleName();
     //paging declaration
     private static final Object sLock = new Object();
     private LiveData<PagedList<Movie>> moviesPaged;
-
+    public LiveData<PagedList<Movie>> listAllMovies;
+    private LiveData<PagedList<Movie>> getListAllMoviesInDb;
+    public MutableLiveData<String> filterMovieName = new MutableLiveData<>();
 
     static final String DATABASE_NAME = "movie_db";
     private static final int NUMBERS_OF_THREADS = 4;
@@ -44,6 +50,7 @@ public abstract class RoomDb extends RoomDatabase {
     };
 
     public static synchronized RoomDb getDatabase(Context context) {
+
         if (INSTANCE == null) {
             INSTANCE= Room.databaseBuilder(context.getApplicationContext(),
                     RoomDb.class, DATABASE_NAME)
@@ -52,6 +59,7 @@ public abstract class RoomDb extends RoomDatabase {
                     //  .addCallback(callback)
                     .build();
             INSTANCE.init();
+            INSTANCE.initSearchMovie();;
         }
         return INSTANCE;
     }
@@ -70,9 +78,39 @@ public abstract class RoomDb extends RoomDatabase {
 
     }
 
+    private void initSearchMovie() {
+        PagedList.Config pagedListConfigSearch = (new PagedList.Config.Builder())
+                .setEnablePlaceholders(false)
+                .setInitialLoadSizeHint(Integer.MAX_VALUE)
+                .setPageSize(Integer.MAX_VALUE).build();
+        listAllMovies = Transformations.switchMap(new DebouncedLiveData<>(filterMovieName, 400), input -> {
+            if (input == null || input.equals("") || input.equals("%%")) {
+                //check if the current value is empty load all data else search
+                synchronized (this) {
+                    //check data is loaded before or not
+                    if (getListAllMoviesInDb == null)
+                        getListAllMoviesInDb = new LivePagedListBuilder<>(
+                                movieDao().loadAllMovie(), pagedListConfigSearch)
+                                .build();
+                }
+                return getListAllMoviesInDb;
+            } else {
+                return new LivePagedListBuilder<>(
+                        movieDao().loadAllMovieFromSearch("%" + input + "%"), pagedListConfigSearch)
+                        .build();
+            }
+        });
+
+    }
+
     public LiveData<PagedList<Movie>> getMoviesPagingLocal() {
         return moviesPaged;
     }
-    //addCallBack used to add dummy data
-    //addMigrations is when you add other field and want to change the version
+
+    public LiveData<PagedList<Movie>> getSearchedRoom() { return listAllMovies;  }
+
+    public MutableLiveData<String> getMoviesPagingSearch() {
+        return filterMovieName;
+    }
+
 }

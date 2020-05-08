@@ -41,12 +41,6 @@ public class RemoteDataSourcePageKey extends PageKeyedDataSource<Long, Movie> {
         return networkState;
     }
 
-
-    public MutableLiveData<String> getErrorStream() {
-        return mError;
-    }
-
-
     public ReplaySubject<Movie> getMoviesReplay() {
         return moviesObservable;
     }
@@ -170,4 +164,9 @@ public class RemoteDataSourcePageKey extends PageKeyedDataSource<Long, Movie> {
             }
         });
     }
+
+    public MutableLiveData<String> getErrorStream() {
+        return mError;
+    }
+
 }

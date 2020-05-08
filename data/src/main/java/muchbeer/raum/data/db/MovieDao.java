@@ -25,14 +25,11 @@ public interface MovieDao {
     @Query("SELECT * FROM movietbl LIMIT :limit")
     LiveData<List<Movie>>getMovie(int limit);
 
-    @Query("SELECT * FROM movietbl WHERE title=:title")
-    LiveData<Movie>getSearchedMovie(String title);
+    @Query("SELECT * FROM movietbl where title LIKE  :name order by title")
+    DataSource.Factory<Integer, Movie> loadAllMovieFromSearch(String name);
 
-
-    // object, with position-based loading under the hood.
-    @Query("SELECT * FROM movietbl")
-    DataSource.Factory<Integer, Movie> getAllMovieOnPaging();
-
+    @Query("SELECT * FROM movietbl order by title")
+    DataSource.Factory<Integer, Movie> loadAllMovie();
 
     @Query("SELECT * FROM movietbl")
     List<Movie> getMoviesPaging();
@@ -47,7 +44,5 @@ public interface MovieDao {
 
     @Query("DELETE FROM movietbl")
     abstract void deleteAllMoviesPaging();
-
-
 
 }

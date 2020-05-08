@@ -2,5 +2,6 @@
     <string name="app_name">LiveDataModelPaging</string>
     <string name="title_activity_movie">Title</string>
     <string name="appbar_scrolling_view_behavior2" translatable="false">com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior</string>
+    <string name="search_hint">Search Movies</string>
 
 </resources>

@@ -63,13 +63,15 @@ public class RemoteDataSource implements DataSource<List<Movie>> {
 
                     mDataApi.setValue(moview);
 
+                } else {
+                    Log.d(LOG_TAG, "Movie Response return null log: ");
+                    mError.setValue("Network problem");
                 }
             }
 
             @Override
             public void onFailure(Call<MovieDbResponse> call, Throwable error) {
-                Log.d(LOG_TAG, "Thread->" +
-                        Thread.currentThread().getName() + "\tGot network error");
+                Log.d(LOG_TAG, "onFailure Retrofit: " + error);
                 mError.setValue(error.toString());
             }
         });

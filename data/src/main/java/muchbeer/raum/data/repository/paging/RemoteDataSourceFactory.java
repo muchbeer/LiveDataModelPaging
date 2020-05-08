@@ -1,6 +1,7 @@
 package muchbeer.raum.data.repository.paging;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
@@ -42,6 +43,7 @@ public class RemoteDataSourceFactory extends DataSource.Factory<Long, Movie> {
     }
 
     public MutableLiveData<String> getErrorMessage() {
+        Log.d(TAG, "eRROR gotten from the PagedKey is "+ moviesPageKeyedDataSource.getErrorStream());
         return moviesPageKeyedDataSource.getErrorStream();
     }
     public ReplaySubject<Movie> getMoviesPaging() {

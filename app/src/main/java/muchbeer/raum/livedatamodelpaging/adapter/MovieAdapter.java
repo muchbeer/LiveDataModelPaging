@@ -6,35 +6,35 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
+import androidx.paging.PagedList;
 import androidx.paging.PagedListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import muchbeer.raum.data.model.Movie;
-import muchbeer.raum.data.model.NetworkState;
 import muchbeer.raum.livedatamodelpaging.R;
 import muchbeer.raum.livedatamodelpaging.databinding.MovieListItemBinding;
 import muchbeer.raum.livedatamodelpaging.view.MovieActivity;
 
-public class MovieAdapter extends PagedListAdapter<Movie, MovieAdapter.MovieViewHolder> {
+public class MovieAdapter extends PagedListAdapter<Movie, MovieAdapter.MovieViewHolder>
+            {
 
-    private NetworkState networkState;
     private Context mcontext;
     private static String LOG_TAG = MovieAdapter.class.getSimpleName();
-
-/*    public MovieAdapter(Context context, ArrayList<Movie> movies ) {
-        this.mcontext = context;
-        this.movieArrayList = movies;
-    }*/
+    PagedList<Movie> getMoviesFromActivity;
 
     //Paging here
-    public MovieAdapter(Context context) {
+    public MovieAdapter(Context context, PagedList<Movie> getMoviesFromActivity) {
         super(Movie.DIFF_CALLBACK);
         this.mcontext = context;
+        this.getMoviesFromActivity = getMoviesFromActivity;
             }
 
     @NonNull
@@ -53,44 +53,10 @@ public class MovieAdapter extends PagedListAdapter<Movie, MovieAdapter.MovieView
         //Movie movie=movieArrayList.get(position);
 
         //paging below
-        Movie movie=getItem(position);
+      Movie  movie =getItem(position);
+       // PagedList<Movie> filtered = returnMoview.add(movie);
         Log.d(LOG_TAG, "The movie items are: " + movie);
         holder.movieListItemBinding.setMovie(movie);
-    }
-
-    private boolean hasExtraRow() {
-        if (networkState != null && networkState != NetworkState.LOADED) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /*@Override
-    public int getItemViewType(int position) {
-
-        if (hasExtraRow() && position == getItemCount() - 1) {
-            return R.layout.network_state_item;
-        } else {
-            return R.layout.movie_item;
-        }
-
-    }*/
-
-    public void setNetworkState(NetworkState newNetworkState) {
-        NetworkState previousState = this.networkState;
-        boolean previousExtraRow = hasExtraRow();
-        this.networkState = newNetworkState;
-        boolean newExtraRow = hasExtraRow();
-        if (previousExtraRow != newExtraRow) {
-            if (previousExtraRow) {
-                notifyItemRemoved(getItemCount());
-            } else {
-                notifyItemInserted(getItemCount());
-            }
-        } else if (newExtraRow && previousState != newNetworkState) {
-            notifyItemChanged(getItemCount() - 1);
-        }
     }
 
     public class MovieViewHolder extends RecyclerView.ViewHolder {

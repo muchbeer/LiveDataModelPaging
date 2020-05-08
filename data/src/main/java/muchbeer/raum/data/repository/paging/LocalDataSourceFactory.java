@@ -16,11 +16,9 @@ public class LocalDataSourceFactory extends DataSource.Factory  {
     private RoomDb mDb;
     private static final String TAG = LocalDataSourceFactory.class.getSimpleName();
     private LocalDataSourcePageKey moviesPageKeyedDataSource;
-
-
+    private String searchArticle;
 
     public LocalDataSourceFactory(MovieDao dao) {
-
         moviesPageKeyedDataSource = new LocalDataSourcePageKey(dao);
     }
 

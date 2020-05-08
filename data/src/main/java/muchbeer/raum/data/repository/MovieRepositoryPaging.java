@@ -23,7 +23,7 @@ public class MovieRepositoryPaging {
     final private MovieNetwork network;
     final private RoomDb database;
     final private MediatorLiveData liveDataMerger;
-    MediatorLiveData<String> mMovieErrorMerger = new MediatorLiveData<>();
+    final private MediatorLiveData<String> mMovieErrorMerger;
 
 
     public MovieRepositoryPaging(Context mContext) {
@@ -36,15 +36,16 @@ public class MovieRepositoryPaging {
 
         // when we get new movies from net we set them into the database
         liveDataMerger = new MediatorLiveData<>();
+        mMovieErrorMerger = new MediatorLiveData<>();
 
         liveDataMerger.addSource(network.getPagedMoviesByPaging(), onlineValue -> {
             liveDataMerger.setValue(onlineValue);
             Log.d(TAG, onlineValue.toString());
         });
 
-        mMovieErrorMerger.addSource(network.getmLocalError(), onlineErrorValue -> {
-            liveDataMerger.setValue(onlineErrorValue);
-            Log.d(TAG, onlineErrorValue.toString());
+        mMovieErrorMerger.addSource(network.getmOnlineError(), onlineErrorValue -> {
+            mMovieErrorMerger.setValue(onlineErrorValue);
+            Log.d(TAG, "No network information log is: " + onlineErrorValue.toString());
         });
 
       //  mMovieErrorMerger.addSource(localDataSourceFactory2.getErrorStream(), });
@@ -69,6 +70,8 @@ public class MovieRepositoryPaging {
         @Override
         public void onZeroItemsLoaded() {
             super.onZeroItemsLoaded();
+
+
             liveDataMerger.addSource(database.getMoviesPagingLocal(), mlocalValue -> {
                 liveDataMerger.setValue(mlocalValue);
                 liveDataMerger.removeSource(database.getMoviesPagingLocal());

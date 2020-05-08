@@ -1,5 +1,7 @@
 package muchbeer.raum.data.repository;
 
+import android.util.Log;
+
 import androidx.arch.core.util.Function;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Transformations;
@@ -22,7 +24,7 @@ public class MovieNetwork {
     private static final int NUMBERS_OF_THREADS = 4;
     final private LiveData<PagedList<Movie>> moviesPaged;
     final private LiveData<NetworkState> networkState;
-    private LiveData<String> mLocalError;
+    private LiveData<String> mOnlineError;
 
 
     public MovieNetwork(RemoteDataSourceFactory dataSourceFactory, PagedList.BoundaryCallback<Movie> boundaryCallback){
@@ -45,7 +47,7 @@ public class MovieNetwork {
                              setBoundaryCallback(boundaryCallback).
                             build();
 
-        mLocalError = dataSourceFactory.getErrorMessage();
+        mOnlineError = dataSourceFactory.getErrorMessage();
     }
 
 
@@ -57,7 +59,8 @@ public class MovieNetwork {
         return networkState;
     }
 
-    public LiveData<String>  getmLocalError() {
-        return mLocalError;
+    public LiveData<String>  getmOnlineError() {
+        Log.d(TAG, "repository error is: " + mOnlineError);
+        return mOnlineError;
     }
 }

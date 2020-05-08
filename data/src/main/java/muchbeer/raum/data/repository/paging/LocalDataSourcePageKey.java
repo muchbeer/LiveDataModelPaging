@@ -18,15 +18,17 @@ public class LocalDataSourcePageKey extends PageKeyedDataSource<Long, Movie> {
     public static final String TAG = LocalDataSourcePageKey.class.getSimpleName();
     private final MovieDao movieDao;
 
+
     public LocalDataSourcePageKey(MovieDao movieDao) {
         this.movieDao = movieDao;
-    }
+            }
     private final MutableLiveData<String> mError=new MutableLiveData<>();
 
     @Override
     public void loadInitial(@NonNull LoadInitialParams<Long> params, @NonNull LoadInitialCallback<Long, Movie> callback) {
         Log.i(TAG, "Loading Initial Rang, Count " + params.requestedLoadSize);
         List<Movie> movies = movieDao.getMoviesPaging();
+
         if(movies.size() != 0) {
             callback.onResult(movies, (long)0, (long)1);
         }

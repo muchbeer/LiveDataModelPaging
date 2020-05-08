@@ -6,16 +6,9 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
-import androidx.paging.LivePagedListBuilder;
 import androidx.paging.PagedList;
 
-import java.util.List;
-
-import muchbeer.raum.data.db.MovieDao;
 import muchbeer.raum.data.model.Movie;
-import muchbeer.raum.data.model.NetworkState;
-import muchbeer.raum.data.repository.MovieRepository;
-import muchbeer.raum.data.repository.MovieRepositoryInterface;
 import muchbeer.raum.data.repository.MovieRepositoryPaging;
 import muchbeer.raum.livedatamodelpaging.info.SharedPreferenceHelper;
 
@@ -31,8 +24,6 @@ public class MainActivityViewModel extends AndroidViewModel {
         super(application);
 
         mMovieRepositoryInterface = MovieRepositoryPaging.getInstance(application);
-
-
     }
 
     @Override
